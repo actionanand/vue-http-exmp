@@ -26,9 +26,8 @@
           <input type="radio" id="rating-great" value="great" name="rating" v-model="chosenRating" />
           <label for="rating-great">Great</label>
         </div>
-        <p
-          v-if="invalidInput"
-        >One or more input fields are invalid. Please check your provided data.</p>
+        <p v-if="invalidInput">One or more input fields are invalid. Please check your provided data.</p>
+        <p v-else-if="isError">{{isError}}</p>
         <div>
           <base-button>Submit</base-button>
         </div>
@@ -44,6 +43,7 @@ export default {
       enteredName: '',
       chosenRating: null,
       invalidInput: false,
+      isError: null
     };
   },
   // emits: ['survey-submit'],
@@ -54,7 +54,7 @@ export default {
         return;
       }
       this.invalidInput = false;
-
+      this.isError = null;
       // this.$emit('survey-submit', {
       //   userName: this.enteredName,
       //   rating: this.chosenRating,
@@ -66,6 +66,15 @@ export default {
           'Content-type': 'application/json'
         },
         body: JSON.stringify({ name: this.enteredName, rating: this.chosenRating })
+      }).then(resp => {
+        if(resp.ok) {
+          console.log('Data sent successfully!');
+        } else {
+          throw new Error('Unable to save data.');
+        }
+      }).catch(err => {
+        console.log({err});
+        this.isError = 'An Error occurred, Your request was unable to send!, '+err.message
       });
 
       this.enteredName = '';
