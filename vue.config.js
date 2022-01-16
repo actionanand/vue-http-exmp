@@ -3,5 +3,5 @@ module.exports = {
   devServer: {
       disableHostCheck: true
   },
-  // publicPath: '/vue-http-exmp/'
+  publicPath: '/vue-http-exmp/'
 }
